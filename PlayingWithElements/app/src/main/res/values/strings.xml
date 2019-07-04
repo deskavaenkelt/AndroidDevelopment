@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PlayingWithElements</string>
+    <string name="ball_with_a_bang">Ball with a bang</string>
+    <string name="todo">TODO</string>
+    <string name="ubuntu_background">ubuntu_background</string>
+    <string name="button">Button</string>
+    <string name="ball">ball</string>
+</resources>
