@@ -24,35 +24,61 @@ public class MainActivity extends AppCompatActivity {
         dice1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (lockDice[0]) {
-                    lockDice[0] = false;
-                    dice1.setBackgroundResource(displayDice(valueOfDice[0], "white"));
-                } else {
-                    lockDice[0] = true;
-                    dice1.setBackgroundResource(displayDice(valueOfDice[0], "red"));
-                }
-                Log.d(TAG, "onClick: lockDice = " + lockDice[0]);
+                int num = 0;
+                changeStateDice(num);
+                dice1.setBackgroundResource(displayDice(valueOfDice[num], lockDice[num]));
             }
         });
-        final Button dice2 = findViewById(R.id.dice2);
-        final Button dice3 = findViewById(R.id.dice3);
-        final Button dice4 = findViewById(R.id.dice4);
-        final Button dice5 = findViewById(R.id.dice5);
-        final Button dice6 = findViewById(R.id.dice6);
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
+        final Button dice2 = findViewById(R.id.dice2);
+        dice2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Button b = (Button) view;
-                b.setBackgroundResource(R.drawable.red4);
+            public void onClick(View v) {
+                int num = 1;
+                changeStateDice(num);
+                dice2.setBackgroundResource(displayDice(valueOfDice[num], lockDice[num]));
             }
-        };
-        //dice1.setOnClickListener(onClickListener);
-        dice2.setOnClickListener(onClickListener);
-        dice3.setOnClickListener(onClickListener);
-        dice4.setOnClickListener(onClickListener);
-        dice5.setOnClickListener(onClickListener);
-        dice6.setOnClickListener(onClickListener);
+        });
+
+        final Button dice3 = findViewById(R.id.dice3);
+        dice3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int num = 2;
+                changeStateDice(num);
+                dice3.setBackgroundResource(displayDice(valueOfDice[num], lockDice[num]));
+            }
+        });
+
+        final Button dice4 = findViewById(R.id.dice4);
+        dice4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int num = 3;
+                changeStateDice(num);
+                dice4.setBackgroundResource(displayDice(valueOfDice[num], lockDice[num]));
+            }
+        });
+
+        final Button dice5 = findViewById(R.id.dice5);
+        dice5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int num = 4;
+                changeStateDice(num);
+                dice5.setBackgroundResource(displayDice(valueOfDice[num], lockDice[num]));
+            }
+        });
+
+        final Button dice6 = findViewById(R.id.dice6);
+        dice6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int num =5;
+                changeStateDice(num);
+                dice6.setBackgroundResource(displayDice(valueOfDice[num], lockDice[num]));
+            }
+        });
 
 
         Button rollDiceButton = findViewById(R.id.rollButton);
@@ -66,25 +92,27 @@ public class MainActivity extends AppCompatActivity {
                     saveResultsIn();
                 }
 
-                dice1.setBackgroundResource(displayWhiteDice(valueOfDice[0]));
-                dice2.setBackgroundResource(displayWhiteDice(valueOfDice[1]));
-                dice3.setBackgroundResource(displayWhiteDice(valueOfDice[2]));
-                dice4.setBackgroundResource(displayWhiteDice(valueOfDice[3]));
-                dice5.setBackgroundResource(displayWhiteDice(valueOfDice[4]));
-                dice6.setBackgroundResource(displayWhiteDice(valueOfDice[5]));
+                dice1.setBackgroundResource(displayDice(valueOfDice[0], lockDice[0]));
+                dice2.setBackgroundResource(displayDice(valueOfDice[1], lockDice[1]));
+                dice3.setBackgroundResource(displayDice(valueOfDice[2], lockDice[2]));
+                dice4.setBackgroundResource(displayDice(valueOfDice[3], lockDice[3]));
+                dice5.setBackgroundResource(displayDice(valueOfDice[4], lockDice[4]));
+                dice6.setBackgroundResource(displayDice(valueOfDice[5], lockDice[5]));
 
             }
         });
 
     }
 
-    /*private void updateDisplayedDices() {
-        if (lockDice[0]) {
-            dice1.setBackgroundResource(displayRedDice(valueOfDice[0]));
+    private void changeStateDice(int num) {
+        if (lockDice[num]) {
+            lockDice[num] = false;
         } else {
-            dice1.setBackgroundResource(displayWhiteDice(valueOfDice[0]));
+            lockDice[num] = true;
         }
-    }*/
+    }
+
+
 
     private void setLockDiceToFalse() {
         for (int i = 0; i < lockDice.length; i++) {
@@ -101,50 +129,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public int displayWhiteDice(int returnWhiteDice) {
-        switch (returnWhiteDice) {
-            case 1:
-                return R.drawable.white1;
-            case 2:
-                return R.drawable.white2;
-            case 3:
-                return R.drawable.white3;
-            case 4:
-                return R.drawable.white4;
-            case 5:
-                return R.drawable.white5;
-            case 6:
-                return R.drawable.white6;
-            default:
-                return 0;
-        }
-    }
-
-    public int displayRedDice(int returnRedDice) {
-        switch (returnRedDice) {
-            case 1:
-                return R.drawable.red1;
-            case 2:
-                return R.drawable.red2;
-            case 3:
-                return R.drawable.red3;
-            case 4:
-                return R.drawable.red4;
-            case 5:
-                return R.drawable.red5;
-            case 6:
-                return R.drawable.red6;
-            default:
-                return 0;
-        }
-    }
-
-    public int displayDice(int returnDiceNumber, String colorToReturn) {
-        if (colorToReturn.equals("")) {
+    public int displayDice(int returnDiceNumber, boolean isLocked) {
+       /* if (colorToReturn.equals("")) {
             return 0;
-        }
+        }*/
 
-        if (colorToReturn.equals("grey")) {
+        /*if (colorToReturn.equals("grey")) {
             switch (returnDiceNumber) {
                 case 1:
                     return R.drawable.grey1;
@@ -161,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     return 0;
             }
-        } else if (colorToReturn.equals("red")) {
+        } else*/ if (isLocked) {
             switch (returnDiceNumber) {
                 case 1:
                     return R.drawable.red1;
@@ -178,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     return 0;
             }
-        } else if (colorToReturn.equals("white")) {
+        } else {
             switch (returnDiceNumber) {
                 case 1:
                     return R.drawable.white1;
@@ -195,8 +185,6 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     return 0;
             }
-        } else {
-            return 0;
         }
 
 
