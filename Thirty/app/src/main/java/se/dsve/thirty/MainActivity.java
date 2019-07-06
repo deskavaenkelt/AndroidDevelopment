@@ -1,10 +1,34 @@
 package se.dsve.thirty;
+/*
+  __
+ /\ \
+ \_\ \    ____  __  __     __
+ /'_` \  /',__\/\ \/\ \  /'__`\
+/\ \L\ \/\__, `\ \ \_/ |/\  __/
+\ \___,_\/\____/\ \___/ \ \____\
+ \/__,_ /\/___/  \/__/   \/____/
+       https://dsve.se/
+*/
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+/**
+ * This is a simple banking application where ju can:
+ * - Add/remove customers
+ * - Make transactions (Deposit/Withdraw)
+ * - Show all transactions and show the banks assets
+ *
+ * @author Lars Strömberg
+ * @version 1.0
+ * @since 2019-07-05
+ * https://github.com/deskavaenkelt/
+ */
+
+
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -14,11 +38,13 @@ public class MainActivity extends AppCompatActivity {
     private static boolean lockDice[] = new boolean[]{false, false, false, false, false, false};
 
     private int countTurns = 0;
+    private boolean allowedToChangeState = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         final Button dice1 = findViewById(R.id.dice1);
         dice1.setOnClickListener(new View.OnClickListener() {
@@ -105,11 +131,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void changeStateDice(int num) {
-        if (lockDice[num]) {
-            lockDice[num] = false;
-        } else {
-            lockDice[num] = true;
+        if (allowedToChangeState) {
+            if (lockDice[num]) {
+                lockDice[num] = false;
+            } else {
+                lockDice[num] = true;
+            }
         }
+
     }
 
 
