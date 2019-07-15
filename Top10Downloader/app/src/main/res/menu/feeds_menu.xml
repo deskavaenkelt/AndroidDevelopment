@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menuTopSongs"
+        android:title="@string/top_songs" />
+    <item
+        android:id="@+id/menuTopAlbums"
+        android:title="@string/top_albums" />
+    <item
+        android:id="@+id/menuTopMovies"
+        android:title="@string/top_movies" />
+    <group
+        android:id="@+id/menuGroupLimit"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu10"
+            android:checked="true"
+            android:title="@string/top_10" />
+        <item
+            android:id="@+id/menu25"
+            android:title="@string/top_25" />
+    </group>
+</menu>

@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Top 10 Downloader</string>
+    <string name="top_10_songs">Top 10 songs</string>
+    <string name="top_10_albums">Top 10 Albums</string>
+    <string name="top_movies">Top Movies</string>
+    <string name="top_10">Top 10</string>
+    <string name="top_25">Top 25</string>
+    <string name="top_songs">Top Songs</string>
+    <string name="top_albums">Top Albums</string>
 </resources>
