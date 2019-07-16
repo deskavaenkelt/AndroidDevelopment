@@ -1,30 +1,39 @@
 package se.dsve.top10downloader;
-
-import android.util.Log;
-
+/*
+  __
+ /\ \
+ \_\ \    ____  __  __     __
+ /'_` \  /',__\/\ \/\ \  /'__`\
+/\ \L\ \/\__, `\ \ \_/ |/\  __/
+\ \___,_\/\____/\ \___/ \ \____\
+ \/__,_ /\/___/  \/__/   \/____/
+       https://dsve.se/
+*/
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.StringReader;
 import java.util.ArrayList;
-
-/*
- * Created
+/**
+ * @author Lars Strömberg
+ * @version 1.0
+ * @since 2019-07-06
+ * https://github.com/deskavaenkelt/AndroidDevelopment/tree/master/Top10Downloader
  */
 
-public class ParseApplications {
+class ParseApplications {
     private static final String TAG = "ParseApplications";
     private ArrayList<FeedEntry> applications;
 
-    public ParseApplications() {
+    ParseApplications() {
         this.applications = new ArrayList<>();
     }
 
-    public ArrayList<FeedEntry> getApplications() {
+    ArrayList<FeedEntry> getApplications() {
         return applications;
     }
 
-    public boolean parse(String xmlData) {
+    boolean parse(String xmlData) {
         boolean status = true;
         FeedEntry currentRecord = null;
         boolean inEntry = false;

@@ -22,4 +22,7 @@
             android:id="@+id/menu25"
             android:title="@string/top_25" />
     </group>
+    <item
+        android:id="@+id/menuRefresh"
+        android:title="@string/refresh" />
 </menu>

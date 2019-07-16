@@ -1,5 +1,14 @@
 package se.dsve.top10downloader;
-
+/*
+  __
+ /\ \
+ \_\ \    ____  __  __     __
+ /'_` \  /',__\/\ \/\ \  /'__`\
+/\ \L\ \/\__, `\ \ \_/ |/\  __/
+\ \___,_\/\____/\ \___/ \ \____\
+ \/__,_ /\/___/  \/__/   \/____/
+       https://dsve.se/
+*/
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,18 +23,32 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+/**
+ * @author Lars Strömberg
+ * @version 1.0
+ * @since 2019-07-06
+ * https://github.com/deskavaenkelt/AndroidDevelopment/tree/master/Top10Downloader
+ */
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private ListView listApps;
     private String feedUrl = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=%d/xml";
     private int feedLimit =10;
+    private String feedCachedUrl = "INVALIDATED";
+    public static final String STATE_URL = "feedUrl";
+    public static final String STATE_LIMIT = "feedLimit";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listApps = findViewById(R.id.xmlListView);
+
+        if (savedInstanceState != null) {
+            feedUrl = savedInstanceState.getString(STATE_URL);
+            feedLimit = savedInstanceState.getInt(STATE_LIMIT);
+        }
 
         downloadUrl(String.format(feedUrl, feedLimit));
 
@@ -34,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.feeds_menu, menu);
+        if (feedLimit == 10) {
+            menu.findItem(R.id.menu10).setChecked(true);
+        } else {
+            menu.findItem(R.id.menu25).setChecked(true);
+        }
         return true;
     }
 
@@ -51,14 +79,19 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menuTopMovies:
                 feedUrl = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topMovies/xml";
                 break;
-            case  R.id.menu10: case  R.id.menu25:
-                if (!item.isChecked()) {
+            case R.id.menu10:
+            case R.id.menu25:
+                if(!item.isChecked()) {
                     item.setChecked(true);
                     feedLimit = 35 - feedLimit;
                     Log.d(TAG, "onOptionsItemSelected: " + item.getTitle() + " setting feedLimit to " + feedLimit);
                 } else {
                     Log.d(TAG, "onOptionsItemSelected: " + item.getTitle() + " feedLimit unchanged");
                 }
+                break;
+            case R.id.menuRefresh:
+                feedCachedUrl = "INVALIDATED";
+                break;
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -68,11 +101,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(STATE_URL, feedUrl);
+        outState.putInt(STATE_LIMIT, feedLimit);
+        super.onSaveInstanceState(outState);
+    }
+
     private void downloadUrl(String feedUrl) {
-        Log.d(TAG, "downloadUrl: starting AsyncTask");
-        DownloadData downloadData = new DownloadData();
-        downloadData.execute(feedUrl);
-        Log.d(TAG, "downloadUrl: done");
+        if(!feedUrl.equalsIgnoreCase(feedCachedUrl)) {
+            Log.d(TAG, "downloadUrl: starting Asynctask");
+            DownloadData downloadData = new DownloadData();
+            downloadData.execute(feedUrl);
+            feedCachedUrl = feedUrl;
+            Log.d(TAG, "downloadUrl: done");
+        } else {
+            Log.d(TAG, "downloadUrl: URL not changed");
+        }
     }
 
     private class DownloadData extends AsyncTask<String, Void, String> {    // url, "progressbar", format
@@ -81,22 +126,24 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-//            Log.d(TAG, "onPostExecute: parameter is " +s);
+//            Log.d(TAG, "onPostExecute: parameter is " + s);
             ParseApplications parseApplications = new ParseApplications();
             parseApplications.parse(s);
 
 //            ArrayAdapter<FeedEntry> arrayAdapter = new ArrayAdapter<>(
 //                    MainActivity.this, R.layout.list_item, parseApplications.getApplications());
 //            listApps.setAdapter(arrayAdapter);
-            FeedAdapter feedAdapter = new FeedAdapter(MainActivity.this, R.layout.list_record, parseApplications.getApplications());
+            FeedAdapter<FeedEntry> feedAdapter = new FeedAdapter<>(MainActivity.this, R.layout.list_record, parseApplications.getApplications());
+
             listApps.setAdapter(feedAdapter);
+
         }
 
         @Override
         protected String doInBackground(String... strings) {
             Log.d(TAG, "doInBackground: starts with " + strings[0]);
             String rssFeed = downloadXML(strings[0]);
-            if (null == rssFeed) {
+            if (rssFeed == null) {
                 Log.e(TAG, "doInBackground: Error downloading");
             }
             return rssFeed;
@@ -134,8 +181,8 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 Log.e(TAG, "downloadXML: IO Exception reading data: " + e.getMessage());
             } catch (SecurityException e) {
-                Log.e(TAG, "downloadXML: Security Exception. Need permission? " + e.getMessage());
-                e.printStackTrace();
+                Log.e(TAG, "downloadXML: Security Exception.  Needs permisson? " + e.getMessage());
+//                e.printStackTrace();
             }
 
             return null;
