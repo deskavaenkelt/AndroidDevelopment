@@ -23,7 +23,7 @@ import com.google.android.youtube.player.YouTubeStandalonePlayer;
  * @author Lars Strömberg
  * @version 1.0
  * @since 2019-07-17
- * https://github.com/deskavaenkelt/
+ * https://github.com/deskavaenkelt/AndroidDevelopment/tree/master/YoutubePlayer
  */
 public class StandAloneActivity extends AppCompatActivity implements View.OnClickListener {
 

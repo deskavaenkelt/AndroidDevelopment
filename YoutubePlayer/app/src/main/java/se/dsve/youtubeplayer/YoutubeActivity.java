@@ -25,7 +25,7 @@ import com.google.android.youtube.player.YouTubePlayerView;
  * @author Lars Strömberg
  * @version 1.0
  * @since 2019-07-16
- * https://github.com/deskavaenkelt/
+ * https://github.com/deskavaenkelt/AndroidDevelopment/tree/master/YoutubePlayer
  */
 public class YoutubeActivity extends YouTubeBaseActivity
         implements YouTubePlayer.OnInitializedListener {

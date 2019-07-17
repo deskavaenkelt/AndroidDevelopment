@@ -20,7 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
  * @author Lars Strömberg
  * @version 1.0
  * @since 2019-07-16
- * https://github.com/deskavaenkelt/
+ * https://github.com/deskavaenkelt/AndroidDevelopment/tree/master/YoutubePlayer
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
