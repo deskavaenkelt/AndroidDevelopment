@@ -16,7 +16,7 @@ package se.dsve.geoquiz;
  * @since 2019-08-05
  * https://github.com/deskavaenkelt/
  */
-public class Question {
+class Question {
 
     private int mTextResId;
     private boolean mAnswerTrue;
