@@ -18,19 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY_INDEX = "index";
     private static final int REQUEST_CODE_CHEAT = 0;
 
-    private static final String ANSWER_ZERO = "zero";
-    private static final String ANSWER_ONE = "one";
-    private static final String ANSWER_TWO = "two";
-    private static final String ANSWER_THREE = "three";
-    private static final String ANSWER_FOUR = "four";
-    private static final String ANSWER_FIVE = "five";
-
-    private static final String HAS_ANSWERED_ZERO = "zero";
-    private static final String HAS_ANSWERED_ONE = "one";
-    private static final String HAS_ANSWERED_TWO = "two";
-    private static final String HAS_ANSWERED_THREE = "three";
-    private static final String HAS_ANSWERED_FOUR = "four";
-    private static final String HAS_ANSWERED_FIVE = "five";
+    private static final String ANSWER[] = new String[] { "zero", "one", "two", "three", "four", "five"};
+    private static final String HAS_ANSWERED[] = new String[] { "zero", "one", "two", "three", "four", "five"};
 
     private Button mTrueButton;
     private Button mFalseButton;
@@ -49,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             new Question(R.string.question_asia, true),
     };
     private boolean[] mUserAnswer = new boolean[6];
-    private boolean[] mHasAbradeAnswered = new boolean[6];
+    private boolean[] mHasAlreadyAnswered = new boolean[6];
 
     private int mCurrentIndex = 0;
     private boolean mIsCheater;
@@ -156,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
 
-        if (mHasAbradeAnswered[mCurrentIndex]) {
+        if (mHasAlreadyAnswered[mCurrentIndex]) {
             mResultTextView.setText(R.string.already_answered);
         } else {
             mResultTextView.setText(R.string.not_answered);
@@ -165,13 +154,13 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isAllQuestionsAnswered() {
         int sum = 0;
-        for (boolean b : mHasAbradeAnswered) {
+        for (boolean b : mHasAlreadyAnswered) {
             if (b) {
                 sum++;
             }
         }
 
-        if (sum == mHasAbradeAnswered.length) {
+        if (sum == mHasAlreadyAnswered.length) {
             Log.d(TAG, "isAllQuestionsAnswered: true");
             return true;
         }
@@ -183,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
     private int calculateScore() {
         int totalScore = 0;
 
-        for (int i = 0; i < mHasAbradeAnswered.length; i++) {
+        for (int i = 0; i < mHasAlreadyAnswered.length; i++) {
             if (mUserAnswer[i] == mQuestionBank[i].isAnswerTrue()) {
                 totalScore++;
             }
@@ -213,12 +202,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void storeAnswer(boolean answerIsTrue) {
-        if (!mHasAbradeAnswered[mCurrentIndex]) {
+        if (!mHasAlreadyAnswered[mCurrentIndex]) {
             mUserAnswer[mCurrentIndex] = answerIsTrue;
-            mHasAbradeAnswered[mCurrentIndex] = true;
+            mHasAlreadyAnswered[mCurrentIndex] = true;
         }
         for (int i = 0; i < mUserAnswer.length; i++) {
-            Log.d(TAG, "storeAnswer: index " + i + " = " + mUserAnswer[i] + ", is answered = " + mHasAbradeAnswered[i]);
+            Log.d(TAG, "storeAnswer: index " + i + " = " + mUserAnswer[i] + ", is answered = " + mHasAlreadyAnswered[i]);
         }
     }
 
@@ -241,20 +230,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mUserAnswer[0] = savedInstanceState.getBoolean(ANSWER_ZERO);
-        mUserAnswer[1] = savedInstanceState.getBoolean(ANSWER_ONE);
-        mUserAnswer[2] = savedInstanceState.getBoolean(ANSWER_TWO);
-        mUserAnswer[3] = savedInstanceState.getBoolean(ANSWER_THREE);
-        mUserAnswer[4] = savedInstanceState.getBoolean(ANSWER_FOUR);
-        mUserAnswer[5] = savedInstanceState.getBoolean(ANSWER_FIVE);
 
-        mHasAbradeAnswered[0] = savedInstanceState.getBoolean(HAS_ANSWERED_ZERO);
-        mHasAbradeAnswered[1] = savedInstanceState.getBoolean(HAS_ANSWERED_ONE);
-        mHasAbradeAnswered[2] = savedInstanceState.getBoolean(HAS_ANSWERED_TWO);
-        mHasAbradeAnswered[3] = savedInstanceState.getBoolean(HAS_ANSWERED_THREE);
-        mHasAbradeAnswered[4] = savedInstanceState.getBoolean(HAS_ANSWERED_FOUR);
-        mHasAbradeAnswered[5] = savedInstanceState.getBoolean(HAS_ANSWERED_FIVE);
+        for (int i = 0; i < ANSWER.length; i++) {
+            mUserAnswer[i] = savedInstanceState.getBoolean(ANSWER[i]);
+        }
 
+        for (int i = 0; i < HAS_ANSWERED.length; i++) {
+            mHasAlreadyAnswered[i] = savedInstanceState.getBoolean(HAS_ANSWERED[i]);
+        }
 
         mResultTextView.setText(savedInstanceState.getCharSequence("Points"));
 
@@ -286,19 +269,13 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "onSaveInstanceState: called");
         outState.putInt(KEY_INDEX, mCurrentIndex);
 
-        outState.putBoolean(ANSWER_ZERO, mUserAnswer[0]);
-        outState.putBoolean(ANSWER_ONE, mUserAnswer[1]);
-        outState.putBoolean(ANSWER_TWO, mUserAnswer[2]);
-        outState.putBoolean(ANSWER_THREE, mUserAnswer[3]);
-        outState.putBoolean(ANSWER_FOUR, mUserAnswer[4]);
-        outState.putBoolean(ANSWER_FIVE, mUserAnswer[5]);
+        for (int i = 0; i < ANSWER.length; i++) {
+            outState.putBoolean(ANSWER[i], mUserAnswer[i]);
+        }
 
-        outState.putBoolean(HAS_ANSWERED_ZERO, mHasAbradeAnswered[0]);
-        outState.putBoolean(HAS_ANSWERED_ONE, mHasAbradeAnswered[1]);
-        outState.putBoolean(HAS_ANSWERED_TWO, mHasAbradeAnswered[2]);
-        outState.putBoolean(HAS_ANSWERED_THREE, mHasAbradeAnswered[3]);
-        outState.putBoolean(HAS_ANSWERED_FOUR, mHasAbradeAnswered[4]);
-        outState.putBoolean(HAS_ANSWERED_FIVE, mHasAbradeAnswered[5]);
+        for (int i = 0; i < HAS_ANSWERED.length; i++) {
+            outState.putBoolean(HAS_ANSWERED[i], mHasAlreadyAnswered[i]);
+        }
 
         outState.putCharSequence("Points", mResultTextView.getText());
 
