@@ -1,5 +1,8 @@
 package se.dsve.geoquiz;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,9 +16,25 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final String KEY_INDEX = "index";
+    private static final int REQUEST_CODE_CHEAT = 0;
+
+    private static final String ANSWER_ZERO = "zero";
+    private static final String ANSWER_ONE = "one";
+    private static final String ANSWER_TWO = "two";
+    private static final String ANSWER_THREE = "three";
+    private static final String ANSWER_FOUR = "four";
+    private static final String ANSWER_FIVE = "five";
+
+    private static final String HAS_ANSWERED_ZERO = "zero";
+    private static final String HAS_ANSWERED_ONE = "one";
+    private static final String HAS_ANSWERED_TWO = "two";
+    private static final String HAS_ANSWERED_THREE = "three";
+    private static final String HAS_ANSWERED_FOUR = "four";
+    private static final String HAS_ANSWERED_FIVE = "five";
 
     private Button mTrueButton;
     private Button mFalseButton;
+    private Button mCheatButton;
     private ImageButton mNextButton;
     private ImageButton mPreviousButton;
     private TextView mQuestionTextView;
@@ -33,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean[] mHasAbradeAnswered = new boolean[6];
 
     private int mCurrentIndex = 0;
+    private boolean mIsCheater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +83,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 checkAnswer(false);
+                nextQuestion();
                 Log.d(TAG, "onClick: FALSE_BUTTON");
+            }
+        });
+
+        mCheatButton = findViewById(R.id.btnCheat);
+        mCheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start cheat activity
+                Log.d(TAG, "onClick: CheatActivity called");
+//                Intent intent = new Intent(MainActivity.this, CheatActivity.class);
+                boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+                Intent intent = CheatActivity.newIntent(MainActivity.this, answerIsTrue);
+//                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_CHEAT);
             }
         });
 
@@ -71,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mIsCheater = false;
                 nextQuestion();
             }
         });
@@ -79,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mIsCheater = false;
                 nextQuestion();
             }
         });
@@ -92,80 +129,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         updateQuestion();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: called");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume: called");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause: called");
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.i(TAG, "onSaveInstanceState: called");
-        outState.putInt(KEY_INDEX, mCurrentIndex);
-
-        outState.putBoolean("Answer0", mUserAnswer[0]);
-        outState.putBoolean("Answer1", mUserAnswer[1]);
-        outState.putBoolean("Answer2", mUserAnswer[2]);
-        outState.putBoolean("Answer3", mUserAnswer[3]);
-        outState.putBoolean("Answer4", mUserAnswer[4]);
-        outState.putBoolean("Answer5", mUserAnswer[5]);
-
-        outState.putBoolean("HasAnswered0", mHasAbradeAnswered[0]);
-        outState.putBoolean("HasAnswered1", mHasAbradeAnswered[1]);
-        outState.putBoolean("HasAnswered2", mHasAbradeAnswered[2]);
-        outState.putBoolean("HasAnswered3", mHasAbradeAnswered[3]);
-        outState.putBoolean("HasAnswered4", mHasAbradeAnswered[4]);
-        outState.putBoolean("HasAnswered5", mHasAbradeAnswered[5]);
-
-        outState.putCharSequence("Points", mResultTextView.getText());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mUserAnswer[0] = savedInstanceState.getBoolean("Answer0");
-        mUserAnswer[1] = savedInstanceState.getBoolean("Answer1");
-        mUserAnswer[2] = savedInstanceState.getBoolean("Answer2");
-        mUserAnswer[3] = savedInstanceState.getBoolean("Answer3");
-        mUserAnswer[4] = savedInstanceState.getBoolean("Answer4");
-        mUserAnswer[5] = savedInstanceState.getBoolean("Answer5");
-
-        mHasAbradeAnswered[0] = savedInstanceState.getBoolean("HasAnswered0");
-        mHasAbradeAnswered[1] = savedInstanceState.getBoolean("HasAnswered1");
-        mHasAbradeAnswered[2] = savedInstanceState.getBoolean("HasAnswered2");
-        mHasAbradeAnswered[3] = savedInstanceState.getBoolean("HasAnswered3");
-        mHasAbradeAnswered[4] = savedInstanceState.getBoolean("HasAnswered4");
-        mHasAbradeAnswered[5] = savedInstanceState.getBoolean("HasAnswered5");
-
-
-        mResultTextView.setText(savedInstanceState.getCharSequence("Points"));
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop: called");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy: called\n================");
     }
 
     private void previousQuestion() {
@@ -194,9 +157,9 @@ public class MainActivity extends AppCompatActivity {
         mQuestionTextView.setText(question);
 
         if (mHasAbradeAnswered[mCurrentIndex]) {
-            mResultTextView.setText("Already answered");
+            mResultTextView.setText(R.string.already_answered);
         } else {
-            mResultTextView.setText("Not answered");
+            mResultTextView.setText(R.string.not_answered);
         }
     }
 
@@ -235,10 +198,15 @@ public class MainActivity extends AppCompatActivity {
 
         int messageResId = 0;
 
-        if (userPressedTrue == answerIsTrue) {
-            messageResId = R.string.correct_toast;
+        if (mIsCheater) {
+            messageResId = R.string.judgment_toast;
         } else {
-            messageResId = R.string.incorrect_toast;
+            if (userPressedTrue == answerIsTrue) {
+                messageResId = R.string.correct_toast;
+            } else {
+                messageResId = R.string.incorrect_toast;
+            }
+
         }
 
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
@@ -252,6 +220,107 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < mUserAnswer.length; i++) {
             Log.d(TAG, "storeAnswer: index " + i + " = " + mUserAnswer[i] + ", is answered = " + mHasAbradeAnswered[i]);
         }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == REQUEST_CODE_CHEAT) {
+            if (data == null) {
+                return;
+            }
+            mIsCheater = CheatActivity.wasAnswerShown(data);
+        }
+        Log.i(TAG, "onActivityResult: mIsCheater is " +mIsCheater);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mUserAnswer[0] = savedInstanceState.getBoolean(ANSWER_ZERO);
+        mUserAnswer[1] = savedInstanceState.getBoolean(ANSWER_ONE);
+        mUserAnswer[2] = savedInstanceState.getBoolean(ANSWER_TWO);
+        mUserAnswer[3] = savedInstanceState.getBoolean(ANSWER_THREE);
+        mUserAnswer[4] = savedInstanceState.getBoolean(ANSWER_FOUR);
+        mUserAnswer[5] = savedInstanceState.getBoolean(ANSWER_FIVE);
+
+        mHasAbradeAnswered[0] = savedInstanceState.getBoolean(HAS_ANSWERED_ZERO);
+        mHasAbradeAnswered[1] = savedInstanceState.getBoolean(HAS_ANSWERED_ONE);
+        mHasAbradeAnswered[2] = savedInstanceState.getBoolean(HAS_ANSWERED_TWO);
+        mHasAbradeAnswered[3] = savedInstanceState.getBoolean(HAS_ANSWERED_THREE);
+        mHasAbradeAnswered[4] = savedInstanceState.getBoolean(HAS_ANSWERED_FOUR);
+        mHasAbradeAnswered[5] = savedInstanceState.getBoolean(HAS_ANSWERED_FIVE);
+
+
+        mResultTextView.setText(savedInstanceState.getCharSequence("Points"));
+
+        mIsCheater = savedInstanceState.getBoolean("isCheater");
+        Log.i(TAG, "onRestoreInstanceState: and isCheater = " + mIsCheater);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart: called");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: called");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: called");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.i(TAG, "onSaveInstanceState: called");
+        outState.putInt(KEY_INDEX, mCurrentIndex);
+
+        outState.putBoolean(ANSWER_ZERO, mUserAnswer[0]);
+        outState.putBoolean(ANSWER_ONE, mUserAnswer[1]);
+        outState.putBoolean(ANSWER_TWO, mUserAnswer[2]);
+        outState.putBoolean(ANSWER_THREE, mUserAnswer[3]);
+        outState.putBoolean(ANSWER_FOUR, mUserAnswer[4]);
+        outState.putBoolean(ANSWER_FIVE, mUserAnswer[5]);
+
+        outState.putBoolean(HAS_ANSWERED_ZERO, mHasAbradeAnswered[0]);
+        outState.putBoolean(HAS_ANSWERED_ONE, mHasAbradeAnswered[1]);
+        outState.putBoolean(HAS_ANSWERED_TWO, mHasAbradeAnswered[2]);
+        outState.putBoolean(HAS_ANSWERED_THREE, mHasAbradeAnswered[3]);
+        outState.putBoolean(HAS_ANSWERED_FOUR, mHasAbradeAnswered[4]);
+        outState.putBoolean(HAS_ANSWERED_FIVE, mHasAbradeAnswered[5]);
+
+        outState.putCharSequence("Points", mResultTextView.getText());
+
+        outState.putBoolean("isCheater", mIsCheater);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: called");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: called");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: called\n================");
     }
 }
 
