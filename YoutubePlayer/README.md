@@ -1,8 +1,8 @@
 <article>
 	<h1>YoutubePlayer</h1>
 	<p>This app plays a single specified video from Göteborg Internet Racing League and also one off the playlists.</p>
-	<p>Livetiming kan följas <a href="http://gbgracing.liveracers.com/live">här</a></p>
-	<p>G.I.R.L.s <a href="gbgracing.org">hemsida</a></p>
+	<p>Livetiming can be followed <a href="http://gbgracing.liveracers.com/live">here</a></p>
+	<p>G.I.R.L.s <a href="gbgracing.org">homepage</a></p>
 	<p>G.I.R.L.s <a href="https://www.youtube.com/channel/UCUVl3Pwf3IagQPf3LJwkZRg">YouTube</a></p>
 </article>
 
