@@ -7,18 +7,17 @@
 	<h2>Current apps that are finished</h2>
 	<ul>
 		<li><a href="https://github.com/deskavaenkelt/AndroidDevelopment/tree/master/ButtonClickApp">ButtonClickApp</a></li>
-		<li>Calculator</li>
-		<li>GeoQuiz</li>
-		<li>PlayingWithElements</li>
-		<li>Top10Downloader</li>
-		<li>YoutubePlayer</li>
+		<li><a href="https://github.com/deskavaenkelt/AndroidDevelopment/tree/master/Calculator">Calculator</a></li>
+		<li><a href="https://github.com/deskavaenkelt/AndroidDevelopment/tree/master/GeoQuiz">GeoQuiz</a></li>
+		<li><a href="https://github.com/deskavaenkelt/AndroidDevelopment/tree/master/PlayingWithElements">PlayingWithElements</a></li>
+		<li><a href="https://github.com/deskavaenkelt/AndroidDevelopment/tree/master/Top10Downloader">Top10Downloader</a></li>
+		<li><a href="https://github.com/deskavaenkelt/AndroidDevelopment/tree/master/YoutubePlayer">YoutubePlayer</a></li>
 	</ul>
 </article>
 
 <article>
 	<h2>Current apps that are not finished</h2>
 	<ul>
-		<li>FlickrBrowser</li>
-		<li>Thirty</li>
+		<li><a href="https://github.com/deskavaenkelt/AndroidDevelopment/tree/master/Thirty">Thirty</a></li>
 	</ul>
 </article>
