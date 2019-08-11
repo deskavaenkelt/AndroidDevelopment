@@ -1,0 +1,44 @@
+<resources>
+    <string name="place_holder">Place Holder</string>
+    <!--Launcher-->
+    <string name="app_name">Thirty</string>
+    <string name="show_main_title">Thirty the game</string>
+    <string name="how_to_play_hide">How to play</string>
+    <string name="how_to_play_show">Click the dice to start. \n\nClick on the button ROLL DICES to run your game</string>
+    <string name="dice_img">Image of a dice</string>
+
+    <!--ThrowDices-->
+    <string name="show_result">Show result</string>
+    <string name="roll_dices">Roll dices</string>
+
+    <string name="throwZero">Throw</string>
+    <string name="throwOne">Two throws left</string>
+    <string name="throwTwo">One throw left</string>
+    <string name="throwThree">No throws left</string>
+    <string name="save_result">Save result</string>
+
+    <string name="show_used_values">Show used values</string>
+    <string name="sum_of_low">Low sum</string>
+    <string name="sum_of_four">Sum of 4</string>
+    <string name="sum_of_five">Sum of 5</string>
+    <string name="sum_of_six">Sum of 6</string>
+    <string name="sum_of_seven">Sum of 7</string>
+    <string name="sum_of_eight">Sum of 8</string>
+    <string name="sum_of_nine">Sum of 9</string>
+    <string name="sum_of_ten">Sum of 10</string>
+    <string name="sum_of_eleven">Sum of 11</string>
+    <string name="sum_of_twelve">Sum of 12</string>
+    <string name="sum_total">Total score: 0p</string>
+    <string name="no_score_yet">0 p</string>
+    <!--ShowResult-->
+    <string name="show_result_title">Result and Score</string>
+
+    <!--SaveTo-->
+    <string name="show_save_to_title">Where to save:</string>
+    <string name="select_dice">Save dice sum in rows</string>
+    <string name="save_in">Save result in:</string>
+    <string name="place_holder_one_ch">x</string>
+    <string name="save">Save</string>
+    <string name="sum">Sum</string>
+    <string name="score">Score</string>
+</resources>

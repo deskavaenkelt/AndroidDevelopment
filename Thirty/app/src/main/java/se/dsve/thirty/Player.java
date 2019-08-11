@@ -11,10 +11,6 @@ package se.dsve.thirty;
 */
 
 /**
- * This is a simple banking application where ju can:
- * - Add/remove customers
- * - Make transactions (Deposit/Withdraw)
- * - Show all transactions and show the banks assets
  *
  * @author Lars Strömberg
  * @version 1.0

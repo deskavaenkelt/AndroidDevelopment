@@ -10,6 +10,9 @@ package se.dsve.thirty;
        https://dsve.se/
 */
 
+import android.app.Activity;
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,10 +20,6 @@ import android.view.View;
 import android.widget.Button;
 
 /**
- * This is a simple banking application where ju can:
- * - Add/remove customers
- * - Make transactions (Deposit/Withdraw)
- * - Show all transactions and show the banks assets
  *
  * @author Lars Strömberg
  * @version 1.0
@@ -33,194 +32,163 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
+    private static final int REQUEST_CODE_TURN_ENDED = 0;
 
-    private static int valueOfDice[] = new int[]{1, 2, 3, 4, 5, 6};
-    private static boolean lockDice[] = new boolean[]{false, false, false, false, false, false};
+    private Score[] mScoreBank = new Score[]{
+            new Score(3,0),
+            new Score(4,0),
+            new Score(5,0),
+            new Score(6,0),
+            new Score(7,0),
+            new Score(8,0),
+            new Score(9,0),
+            new Score(10,0),
+            new Score(11,0),
+            new Score(12,0)
+    };
 
-    private int countTurns = 0;
-    private boolean allowedToChangeState = false;
+    private static int REQUESTED_DICE1_RESULT = 0;
+    private static int REQUESTED_DICE2_RESULT = 0;
+    private static int REQUESTED_DICE3_RESULT = 0;
+    private static int REQUESTED_DICE4_RESULT = 0;
+    private static int REQUESTED_DICE5_RESULT = 0;
+    private static int REQUESTED_DICE6_RESULT = 0;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+
+//            requestCode = -1 => defaultValue
+//            requestCode = 1 => get data from ThrownDices
+//            requestCode = 2 => get data from SaveResult
+            int mDataFromSource = data.getIntExtra("mDataFromSource", -1);
+
+            if (1 == mDataFromSource) {
+                REQUESTED_DICE1_RESULT = data.getIntExtra("resultDice0", -1);
+                REQUESTED_DICE2_RESULT = data.getIntExtra("resultDice1", -1);
+                REQUESTED_DICE3_RESULT = data.getIntExtra("resultDice2", -1);
+                REQUESTED_DICE4_RESULT = data.getIntExtra("resultDice3", -1);
+                REQUESTED_DICE5_RESULT = data.getIntExtra("resultDice4", -1);
+                REQUESTED_DICE6_RESULT = data.getIntExtra("resultDice5", -1);
+            } else if (2 == mDataFromSource) {
+
+            }
+
+        }
+
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: called");
         setContentView(R.layout.activity_main);
 
-
-        final Button dice1 = findViewById(R.id.dice1);
-        dice1.setOnClickListener(new View.OnClickListener() {
+        Button playGame = findViewById(R.id.btnPlay);
+        playGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int num = 0;
-                changeStateDice(num);
-                dice1.setBackgroundResource(displayDice(valueOfDice[num], lockDice[num]));
+                // Start throw_dice_activity
+                Log.d(TAG, "onClick: ThrowDices.class called");
+
+                Intent mIntent = new Intent(MainActivity.this, ThrowDices.class);
+                mIntent.putExtra("dice0", 2);
+                mIntent.putExtra("dice1", 1);
+                startActivityForResult(mIntent, REQUEST_CODE_TURN_ENDED);
             }
         });
 
-        final Button dice2 = findViewById(R.id.dice2);
-        dice2.setOnClickListener(new View.OnClickListener() {
+        Button mCurrentResultButton = findViewById(R.id.btnResult);
+        mCurrentResultButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int num = 1;
-                changeStateDice(num);
-                dice2.setBackgroundResource(displayDice(valueOfDice[num], lockDice[num]));
-            }
-        });
-
-        final Button dice3 = findViewById(R.id.dice3);
-        dice3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int num = 2;
-                changeStateDice(num);
-                dice3.setBackgroundResource(displayDice(valueOfDice[num], lockDice[num]));
-            }
-        });
-
-        final Button dice4 = findViewById(R.id.dice4);
-        dice4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int num = 3;
-                changeStateDice(num);
-                dice4.setBackgroundResource(displayDice(valueOfDice[num], lockDice[num]));
-            }
-        });
-
-        final Button dice5 = findViewById(R.id.dice5);
-        dice5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int num = 4;
-                changeStateDice(num);
-                dice5.setBackgroundResource(displayDice(valueOfDice[num], lockDice[num]));
-            }
-        });
-
-        final Button dice6 = findViewById(R.id.dice6);
-        dice6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int num =5;
-                changeStateDice(num);
-                dice6.setBackgroundResource(displayDice(valueOfDice[num], lockDice[num]));
-            }
-        });
-
-
-        Button rollDiceButton = findViewById(R.id.rollButton);
-        rollDiceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (countTurns >= 0 || countTurns <3) {
-                    rollDice();
-                } else {
-                    countTurns = 0;
-                    saveResultsIn();
-                }
-
-                dice1.setBackgroundResource(displayDice(valueOfDice[0], lockDice[0]));
-                dice2.setBackgroundResource(displayDice(valueOfDice[1], lockDice[1]));
-                dice3.setBackgroundResource(displayDice(valueOfDice[2], lockDice[2]));
-                dice4.setBackgroundResource(displayDice(valueOfDice[3], lockDice[3]));
-                dice5.setBackgroundResource(displayDice(valueOfDice[4], lockDice[4]));
-                dice6.setBackgroundResource(displayDice(valueOfDice[5], lockDice[5]));
-
+                Intent intent = new Intent(MainActivity.this, SaveResult.class);
+                startActivity(intent);
             }
         });
 
     }
 
-    private void changeStateDice(int num) {
-        if (allowedToChangeState) {
-            if (lockDice[num]) {
-                lockDice[num] = false;
-            } else {
-                lockDice[num] = true;
-            }
-        }
-
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart: called");
     }
 
-
-
-    private void setLockDiceToFalse() {
-        for (int i = 0; i < lockDice.length; i++) {
-            lockDice[i] = false;
-        }
-        countTurns++;
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: called");
     }
 
-    private void rollDice() {
-        for (int i = 0; i < 6; i++) {
-            if (!lockDice[i]) {
-                valueOfDice[i] = (int) ((Math.random() * 6) + 1);
-            }
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: called");
     }
 
-    public int displayDice(int returnDiceNumber, boolean isLocked) {
-       /* if (colorToReturn.equals("")) {
-            return 0;
-        }*/
-
-        /*if (colorToReturn.equals("grey")) {
-            switch (returnDiceNumber) {
-                case 1:
-                    return R.drawable.grey1;
-                case 2:
-                    return R.drawable.grey2;
-                case 3:
-                    return R.drawable.grey3;
-                case 4:
-                    return R.drawable.grey4;
-                case 5:
-                    return R.drawable.grey5;
-                case 6:
-                    return R.drawable.grey6;
-                default:
-                    return 0;
-            }
-        } else*/ if (isLocked) {
-            switch (returnDiceNumber) {
-                case 1:
-                    return R.drawable.red1;
-                case 2:
-                    return R.drawable.red2;
-                case 3:
-                    return R.drawable.red3;
-                case 4:
-                    return R.drawable.red4;
-                case 5:
-                    return R.drawable.red5;
-                case 6:
-                    return R.drawable.red6;
-                default:
-                    return 0;
-            }
-        } else {
-            switch (returnDiceNumber) {
-                case 1:
-                    return R.drawable.white1;
-                case 2:
-                    return R.drawable.white2;
-                case 3:
-                    return R.drawable.white3;
-                case 4:
-                    return R.drawable.white4;
-                case 5:
-                    return R.drawable.white5;
-                case 6:
-                    return R.drawable.white6;
-                default:
-                    return 0;
-            }
-        }
-
-
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: called");
     }
 
-    public void saveResultsIn() {
-        Log.d(TAG, "saveResultsIn: something");
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: called");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: called");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState: called");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d(TAG, "onRestoreInstanceState: called");
     }
 }
+
+
+//                Intent intent = new Intent(MainActivity.this, ThrowDices.class);
+//                boolean answerIsTrue = true;
+//                Intent intent = ThrowDices.newIntent(MainActivity.this, REQUESTED_DICE1_RESULT, REQUESTED_DICE2_RESULT,REQUESTED_DICE3_RESULT, REQUESTED_DICE4_RESULT, REQUESTED_DICE5_RESULT, REQUESTED_DICE6_RESULT);
+//                startActivity(intent);
+//                startActivityForResult(mIntent, REQUEST_CODE_TURN_ENDED);
+//                Log.i(TAG, "onClick: result is: " +
+//                        REQUESTED_DICE1_RESULT + ", " +
+//                        REQUESTED_DICE2_RESULT + ", " +
+//                        REQUESTED_DICE3_RESULT + ", " +
+//                        REQUESTED_DICE4_RESULT + ", " +
+//                        REQUESTED_DICE5_RESULT + ", " +
+//                        REQUESTED_DICE6_RESULT);
+
+/*
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == REQUEST_CODE_TURN_ENDED) {
+            if (data == null) {
+                return;
+            }
+            data = getIntent();
+            REQUESTED_DICE1_RESULT = data.getExtras().getInt("dice0");
+        }
+        Log.i(TAG, "onActivityResult: dice0 is " + REQUESTED_DICE1_RESULT);
+    }
+
+ */

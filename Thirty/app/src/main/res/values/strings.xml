@@ -1,3 +1,42 @@
 <resources>
     <string name="app_name">Thirty</string>
+    <string name="result_board">Result board</string>
+    <string name="value">Value</string>
+
+    <!--activity_main-->
+    <string name="start_page_welcome">Welcome to the game</string>
+    <string name="start_page_title">THIRTY</string>
+    <string name="play">Play</string>
+    <string name="round_result">Show current result</string>
+    <string name="dice_logo">Picture of a dice</string>
+
+    <!--activity_throw_dices-->
+    <string name="roll_dice">Roll dice</string>
+    <string name="hint">How to play</string>
+    <string name="how_to_start_game">Click on the button ROLL DICE to start your game</string>
+    <string name="throwZero">Throw</string>
+    <string name="throwOne">Two throws left</string>
+    <string name="throwTwo">One throw left</string>
+    <string name="throwThree">No throws left</string>
+    <string name="save_in">Save in</string>
+    <string name="apply_button">Apply</string>
+    <string name="three_or_less">Three or less</string>
+
+
+    <!--activity_save_result-->
+    <string name="round_result_title">Where to save points</string>
+    <string name="val">Val</string>
+    <string name="sum_part">Score</string>
+    <string name="low_sum">Low sum</string>
+    <string name="sum_of_four">Sum of 4</string>
+    <string name="sum_of_five">Sum of 5</string>
+    <string name="sum_of_six">Sum of 6</string>
+    <string name="sum_of_seven">Sum of 7</string>
+    <string name="sum_of_eight">Sum of 8</string>
+    <string name="sum_of_nine">Sum of 9</string>
+    <string name="sum_of_ten">Sum of 10</string>
+    <string name="sum_of_eleven">Sum of 11</string>
+    <string name="sum_of_twelve">Sum of 12</string>
+    <string name="sum_total">Total score: 0p</string>
+    <string name="no_score_yet">0 p</string>
 </resources>
