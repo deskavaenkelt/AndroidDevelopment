@@ -6,7 +6,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -77,6 +76,8 @@ public class ThrowDices extends AppCompatActivity implements View.OnClickListene
             new Score(12, 0)
     };
     private boolean mShowUsedValues = true;
+
+    private boolean mGameOver = false;
 
 
     @Override
@@ -162,9 +163,12 @@ public class ThrowDices extends AppCompatActivity implements View.OnClickListene
     // Activity related to show result
     private void clickOnShowResult() {
         Toast.makeText(this, "hi result", Toast.LENGTH_SHORT).show();
+
+        String[] scoreBank = new String[]{"r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10"};
         Intent showResult = new Intent(ThrowDices.this, ShowResult.class);
-        showResult.putExtra("show", "show this number ");
-        showResult.putExtra("and", 1);
+        for (int i = 0; i < scoreBank.length; i++) {
+            showResult.putExtra(scoreBank[i], mScoreBank[i].getScore());
+        }
         startActivityForResult(showResult, REQUEST_CODE_RESULT);
     }
 
@@ -277,13 +281,16 @@ public class ThrowDices extends AppCompatActivity implements View.OnClickListene
     private void clickOnSaveTo() {
         int[] dices = mGamePlay.getValueOfDices();
         String[] diceName = new String[]{ "dice1", "dice2", "dice3", "dice4", "dice5", "dice6"};
-        String[] usedUpValuesInScoreBank = new String[]{"usedUpValue0"};
+        String[] usedUpValuesInScoreBank = new String[]{"usedUpValue3", "usedUpValue4", "usedUpValue5", "usedUpValue6", "usedUpValue7", "usedUpValue8", "usedUpValue9", "usedUpValue10", "usedUpValue11", "usedUpValue12"};
 
         // TODO: mScoreBank[0].isAllowedToChange();
 
         Intent saveThisIn = new Intent(ThrowDices.this, SaveTo.class);
         for (int i = 0; i < diceName.length; i++) {
             saveThisIn.putExtra(diceName[i], dices[i]);
+        }
+        for (int i = 0; i < usedUpValuesInScoreBank.length; i++) {
+            saveThisIn.putExtra(usedUpValuesInScoreBank[i], mScoreBank[i].isAllowedToChange());
         }
         startActivityForResult(saveThisIn, REQUEST_CODE_SAVE_IN);
     }
@@ -319,13 +326,34 @@ public class ThrowDices extends AppCompatActivity implements View.OnClickListene
                 } catch (NullPointerException e) {
                     Log.e(TAG, "onActivityResult: ", e);
                 }
-                switchButtons(false);
+
+
+                if (checkIfGameOver()) {
+                    switchButtons(true);
+                    Log.d(TAG, "onActivityResult: GAME OVER!");
+                } else {
+                    switchButtons(false);
+                }
+
+
                 mGamePlay.resetRound();
                 updateDicesOnTheDisplay();
                 updateThrowText();
                 updateUsedValuesColors();
-                Log.d(TAG, "onActivityResult: mScoreBank[3].getScore() = " + mScoreBank[3].getScore());
             }
         }
+
+
+        // TODO: Resultcode för att reseta spelet
+        // TODO: Skapa highscore på förstasidan?
+    }
+
+    private boolean checkIfGameOver() {
+        for (int i = 0; i < mScoreBank.length; i++) {
+            if (mScoreBank[i].isAllowedToChange()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

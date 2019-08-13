@@ -39,10 +39,6 @@ class Score {
         return mAllowedToChange;
     }
 
-    void setAllowedToChange(boolean allowedToChange) {
-        mAllowedToChange = allowedToChange;
-    }
-
     void updateScore(int scoreId, int newScore) {
         this.mScoreId = scoreId;
         this.mScore = newScore;

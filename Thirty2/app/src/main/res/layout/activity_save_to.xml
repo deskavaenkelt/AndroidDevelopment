@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/show_save_to_title"
+        android:textAlignment="center"
         android:textSize="30sp"
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,6 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/select_dice"
+        android:textAlignment="center"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
@@ -33,40 +36,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4">
 
         <ImageView
-            android:id="@+id/ivResultDice2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:contentDescription="@string/dice_img"
-            app:layout_constraintStart_toEndOf="@+id/ivResultDice1"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/white1" />
-
-        <ImageView
             android:id="@+id/ivResultDice1"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="16dp"
             android:contentDescription="@string/dice_img"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/white1" />
 
         <ImageView
-            android:id="@+id/ivResultDice5"
+            android:id="@+id/ivResultDice2"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
             android:contentDescription="@string/dice_img"
-            app:layout_constraintStart_toEndOf="@+id/ivResultDice4"
+            app:layout_constraintStart_toEndOf="@+id/ivResultDice1"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/white1" />
 
@@ -75,7 +66,6 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
             android:contentDescription="@string/dice_img"
             app:layout_constraintStart_toEndOf="@+id/ivResultDice2"
             app:layout_constraintTop_toTopOf="parent"
@@ -86,9 +76,18 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
             android:contentDescription="@string/dice_img"
             app:layout_constraintStart_toEndOf="@+id/ivResultDice3"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/white1" />
+
+        <ImageView
+            android:id="@+id/ivResultDice5"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:contentDescription="@string/dice_img"
+            app:layout_constraintStart_toEndOf="@+id/ivResultDice4"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/white1" />
 
@@ -97,13 +96,12 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
             android:contentDescription="@string/dice_img"
             app:layout_constraintStart_toEndOf="@+id/ivResultDice5"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/white1" />
 
-        <TextView
+        <!--<TextView
             android:id="@+id/textView6"
             android:layout_width="40dp"
             android:layout_height="20dp"
@@ -501,7 +499,7 @@
             app:layout_constraintEnd_toEndOf="@+id/tvSumRow1"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tvSumRow1"
-            app:layout_constraintTop_toBottomOf="@+id/tvSumRow5" />
+            app:layout_constraintTop_toBottomOf="@+id/tvSumRow5" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -509,7 +507,8 @@
         android:id="@+id/twScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/score"
+        android:layout_marginTop="16dp"
+        android:text="@string/save_in"
         android:textAlignment="center"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -521,6 +520,7 @@
         android:id="@+id/clShowUsedValuesInSaveTo"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/twScore">
@@ -639,5 +639,28 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnCalculateScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/calculate_score"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clShowUsedValuesInSaveTo" />
+
+    <TextView
+        android:id="@+id/tvShowCalculatedScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/no_score_yet"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCalculateScore" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

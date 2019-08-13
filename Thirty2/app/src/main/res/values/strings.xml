@@ -32,13 +32,15 @@
     <string name="no_score_yet">0 p</string>
     <!--ShowResult-->
     <string name="show_result_title">Result and Score</string>
+    <string name="restart_game">Restart game</string>
 
     <!--SaveTo-->
     <string name="show_save_to_title">Where to save:</string>
-    <string name="select_dice">Save dice sum in rows</string>
+    <string name="select_dice">Your dices:</string>
     <string name="save_in">Save result in:</string>
     <string name="place_holder_one_ch">x</string>
     <string name="save">Save</string>
     <string name="sum">Sum</string>
     <string name="score">Score</string>
+    <string name="calculate_score">Calculate score</string>
 </resources>

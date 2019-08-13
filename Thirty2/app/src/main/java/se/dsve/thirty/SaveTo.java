@@ -6,24 +6,48 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import static android.graphics.Color.GREEN;
+import static android.graphics.Color.RED;
+import static android.graphics.Color.YELLOW;
+
 
 public class SaveTo extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "SaveTo";
 
     // Update Dices with received Intent
     private int[] dicesRecived = new int[6];
+    private boolean[] isAllowedToChangeRecieved = new boolean[10];
     private void receivedIntent() {
         String[] diceName = new String[]{"dice1", "dice2", "dice3", "dice4", "dice5", "dice6"};
+        String[] usedUpValuesInScoreBank = new String[]{"usedUpValue3", "usedUpValue4", "usedUpValue5", "usedUpValue6", "usedUpValue7", "usedUpValue8", "usedUpValue9", "usedUpValue10", "usedUpValue11", "usedUpValue12"};
 
         Intent receivedIntent = getIntent();
         for (int i = 0; i < diceName.length; i++) {
             dicesRecived[i] = receivedIntent.getIntExtra(diceName[i], -1);
         }
+        for (int i = 0; i < usedUpValuesInScoreBank.length; i++) {
+            isAllowedToChangeRecieved[i] = receivedIntent.getBooleanExtra(usedUpValuesInScoreBank[i], true);
+        }
+    }
+
+    // Return Sum and where to save
+    private int mReturnThisScore;
+    private int mSaveScoreIn;
+    private void returnThis() {
+        Log.d(TAG, "returnThis: mReturnThisScore = " + mReturnThisScore +
+                ", and mSaveScoreIn = " + mSaveScoreIn);
+
+        String[] returnValue = new String[]{"coming_back", "total_score", "save_in"};
+        Intent sendBackThis = new Intent();
+        sendBackThis.putExtra(returnValue[0], "Successfully saved");
+        sendBackThis.putExtra(returnValue[1], mReturnThisScore);
+        sendBackThis.putExtra(returnValue[2], mSaveScoreIn);
+        setResult(RESULT_OK, sendBackThis);
     }
 
     // Related to ImageView Dices
@@ -38,12 +62,12 @@ public class SaveTo extends AppCompatActivity implements View.OnClickListener {
     }
     private void updateDicesOnTheDisplay() {
         /*for (int i = 0; i < dicesRecived.length; i++) {
-            Log.i(TAG, "updateDicesOnTheDisplay: dice" + i + " = " + dicesRecived[i] + " useDice = " + useDice[i]);
+            Log.i(TAG, "updateDicesOnTheDisplay: dice" + i + " = " + dicesRecived[i] + " mUseDice = " + mUseDice[i]);
         }*/
 
         // Check every dice's boolean
-        for (int j = 0; j < useDice.length; j++) {
-            if (useDice[j]) {
+        for (int j = 0; j < mUseDice.length; j++) {
+            if (mUseDice[j]) {
                 ifWhiteDice(j);
             } else {
                 ifRedDice(j);
@@ -85,117 +109,15 @@ public class SaveTo extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
-    private boolean[] useDice = new boolean[6];
+    private boolean[] mUseDice = new boolean[6];
     private void setUseDicesToTrue() {
-        for (int i = 0; i < useDice.length; i++) {
-            useDice[i] = true;
+        for (int i = 0; i < mUseDice.length; i++) {
+            mUseDice[i] = true;
         }
     }
 
-    // Return Sum and where to save
-    private int mReturnThisScore;
-    private int mSaveScoreIn;
-    private void returnThis() {
-        String[] returnValue = new String[]{"coming_back", "total_score", "save_in"};
-        Intent sendBackThis = new Intent();
-        sendBackThis.putExtra(returnValue[0], "Successfully saved");
-        sendBackThis.putExtra(returnValue[1], mReturnThisScore);
-        sendBackThis.putExtra(returnValue[2], mSaveScoreIn);
-        setResult(RESULT_OK, sendBackThis);
-    }
 
-    // Related to Radio Groups, Radio Buttons
-    private RadioGroup[] mRadioGroupsColon = new RadioGroup[6];
-    private void mapRadioGroups() {
-        mRadioGroupsColon[0] = findViewById(R.id.rbgDice1);
-        mRadioGroupsColon[1] = findViewById(R.id.rbgDice2);
-        mRadioGroupsColon[2] = findViewById(R.id.rbgDice3);
-        mRadioGroupsColon[3] = findViewById(R.id.rbgDice4);
-        mRadioGroupsColon[4] = findViewById(R.id.rbgDice5);
-        mRadioGroupsColon[5] = findViewById(R.id.rbgDice6);
-    }
-    private RadioButton[] mRadioButtonsRow1 = new RadioButton[6];
-    private void mapRadioButtonsRow1() {
-        mRadioButtonsRow1[0] = findViewById(R.id.rbc1r1);
-        mRadioButtonsRow1[1] = findViewById(R.id.rbc2r1);
-        mRadioButtonsRow1[2] = findViewById(R.id.rbc3r1);
-        mRadioButtonsRow1[3] = findViewById(R.id.rbc4r1);
-        mRadioButtonsRow1[4] = findViewById(R.id.rbc5r1);
-        mRadioButtonsRow1[5] = findViewById(R.id.rbc6r1);
-    }
-    private RadioButton[] mRadioButtonsRow2 = new RadioButton[6];
-    private void mapRadioButtonsRow2() {
-        mRadioButtonsRow2[0] = findViewById(R.id.rbc1r2);
-        mRadioButtonsRow2[1] = findViewById(R.id.rbc2r2);
-        mRadioButtonsRow2[2] = findViewById(R.id.rbc3r2);
-        mRadioButtonsRow2[3] = findViewById(R.id.rbc4r2);
-        mRadioButtonsRow2[4] = findViewById(R.id.rbc5r2);
-        mRadioButtonsRow2[5] = findViewById(R.id.rbc6r2);
-    }
-    private RadioButton[] mRadioButtonsRow3 = new RadioButton[6];
-    private void mapRadioButtonsRow3() {
-        mRadioButtonsRow3[0] = findViewById(R.id.rbc1r3);
-        mRadioButtonsRow3[1] = findViewById(R.id.rbc2r3);
-        mRadioButtonsRow3[2] = findViewById(R.id.rbc3r3);
-        mRadioButtonsRow3[3] = findViewById(R.id.rbc4r3);
-        mRadioButtonsRow3[4] = findViewById(R.id.rbc5r3);
-        mRadioButtonsRow3[5] = findViewById(R.id.rbc6r3);
-    }
-    private RadioButton[] mRadioButtonsRow4 = new RadioButton[6];
-    private void mapRadioButtonsRow4() {
-        mRadioButtonsRow4[0] = findViewById(R.id.rbc1r4);
-        mRadioButtonsRow4[1] = findViewById(R.id.rbc2r4);
-        mRadioButtonsRow4[2] = findViewById(R.id.rbc3r4);
-        mRadioButtonsRow4[3] = findViewById(R.id.rbc4r4);
-        mRadioButtonsRow4[4] = findViewById(R.id.rbc5r4);
-        mRadioButtonsRow4[5] = findViewById(R.id.rbc6r4);
-    }
-    private RadioButton[] mRadioButtonsRow5 = new RadioButton[6];
-    private void mapRadioButtonsRow5() {
-        mRadioButtonsRow5[0] = findViewById(R.id.rbc1r5);
-        mRadioButtonsRow5[1] = findViewById(R.id.rbc2r5);
-        mRadioButtonsRow5[2] = findViewById(R.id.rbc3r5);
-        mRadioButtonsRow5[3] = findViewById(R.id.rbc4r5);
-        mRadioButtonsRow5[4] = findViewById(R.id.rbc5r5);
-        mRadioButtonsRow5[5] = findViewById(R.id.rbc6r5);
-    }
-    private RadioButton[] mRadioButtonsRow6 = new RadioButton[6];
-    private void mapRadioButtonsRow6() {
-        mRadioButtonsRow6[0] = findViewById(R.id.rbc1r6);
-        mRadioButtonsRow6[1] = findViewById(R.id.rbc2r6);
-        mRadioButtonsRow6[2] = findViewById(R.id.rbc3r6);
-        mRadioButtonsRow6[3] = findViewById(R.id.rbc4r6);
-        mRadioButtonsRow6[4] = findViewById(R.id.rbc5r6);
-        mRadioButtonsRow6[5] = findViewById(R.id.rbc6r6);
-    }
-
-    private void initializeRadioRelated() {
-        mapRadioGroups();
-        mapRadioButtonsRow1();
-        mapRadioButtonsRow2();
-        mapRadioButtonsRow3();
-        mapRadioButtonsRow4();
-        mapRadioButtonsRow5();
-        mapRadioButtonsRow6();
-
-        mapTextViewTotalScore();
-    }
-
-    // TextView sum of every row + total score
-    private TextView[] mTextViewSum = new TextView[6];
-    private TextView mTextViewTotalScore;
-    private void mapTextViewTotalScore() {
-        mTextViewSum[0] = findViewById(R.id.tvSumRow1);
-        mTextViewSum[1] = findViewById(R.id.tvSumRow2);
-        mTextViewSum[2] = findViewById(R.id.tvSumRow3);
-        mTextViewSum[3] = findViewById(R.id.tvSumRow4);
-        mTextViewSum[4] = findViewById(R.id.tvSumRow5);
-        mTextViewSum[5] = findViewById(R.id.tvSumRow6);
-
-        mTextViewTotalScore = findViewById(R.id.twScore);
-    }
-
-    // TextView that display if its possible to sav in certain container
+    // TextView that display if its possible to save in certain container
     private TextView[] mTextViewtvUsedValueInSaveTo = new TextView[10];
     private void mapTextViewtvUsedValueInSaveTo() {
         mTextViewtvUsedValueInSaveTo[0] = findViewById(R.id.tvUsedValue3InSaveTo);
@@ -209,6 +131,25 @@ public class SaveTo extends AppCompatActivity implements View.OnClickListener {
         mTextViewtvUsedValueInSaveTo[8] = findViewById(R.id.tvUsedValue11InSaveTo);
         mTextViewtvUsedValueInSaveTo[9] = findViewById(R.id.tvUsedValue12InSaveTo);
     }
+    private void updateUsedValuesColors() {
+        for (int i = 0; i < isAllowedToChangeRecieved.length; i++) {
+            if (isAllowedToChangeRecieved[i]) {
+                mTextViewtvUsedValueInSaveTo[i].setBackgroundColor(GREEN);
+            } else {
+                mTextViewtvUsedValueInSaveTo[i].setBackgroundColor(RED);
+            }
+        }
+    }
+    private int saveInContainer = -1;
+
+    // TextView for displaying score
+    private TextView mTextViewShowCalculatedScore;
+
+    // Buttons
+    private Button mButtonSave;
+    private Button mButtonCalculateScore;
+
+    CalculateScore calculateScore;
 
     // onCreate
     @Override
@@ -219,28 +160,45 @@ public class SaveTo extends AppCompatActivity implements View.OnClickListener {
 
         // Receive intents first
         receivedIntent();
-        initiateImageViews();
-
-        // Update stuff related to intents
-        setUseDicesToTrue();
-        updateDicesOnTheDisplay();
-
-        // Make dices clickable
-        for (int i = 0; i < mImageViewDiceResult.length; i++) {
-            mImageViewDiceResult[i].setOnClickListener(this);
-        }
-
-        // Stuff related to Radio Buttons
-        initializeRadioRelated();
-
-        // Stuff related to show used containers
-        mapTextViewtvUsedValueInSaveTo();
-        // TODO: send the array with intent
 
         // Return intent
         mReturnThisScore = 6;
         mSaveScoreIn = 3;
         returnThis();
+
+        // Dices
+        initiateImageViews();
+        // Update stuff related to intents
+        setUseDicesToTrue();
+        updateDicesOnTheDisplay();
+        // Make dices clickable
+        for (int i = 0; i < mImageViewDiceResult.length; i++) {
+            mImageViewDiceResult[i].setOnClickListener(this);
+        }
+
+
+        // Initiate calculate score TextView
+        mTextViewShowCalculatedScore = findViewById(R.id.tvShowCalculatedScore);
+
+        // Make clickable buttons
+        mButtonSave = findViewById(R.id.btnSave);
+        mButtonSave.setOnClickListener(this);
+        mButtonCalculateScore = findViewById(R.id.btnCalculateScore);
+        mButtonCalculateScore.setOnClickListener(this);
+
+        // Stuff related to show used containers
+        mapTextViewtvUsedValueInSaveTo();
+        updateUsedValuesColors();
+        for (int i = 0; i < mTextViewtvUsedValueInSaveTo.length; i++) {
+            mTextViewtvUsedValueInSaveTo[i].setOnClickListener(this);
+        }
+
+
+        // Stuff related to calculate score
+        calculateScore = new CalculateScore();
+
+
+
     }
 
     @Override
@@ -261,22 +219,100 @@ public class SaveTo extends AppCompatActivity implements View.OnClickListener {
             case R.id.ivResultDice5:
                 clickOnDice(4);
                 break;
+            case R.id.btnSave:
+                clickOnSaveButton();
+                break;
             case R.id.ivResultDice6:
                 clickOnDice(5);
+                break;
+            case R.id.btnCalculateScore:
+                clickOnCalculateScoreButton();
+                break;
+            case R.id.tvUsedValue3InSaveTo:
+                clickOnWhereToSaveTextViews(0);
+                break;
+            case R.id.tvUsedValue4InSaveTo:
+                clickOnWhereToSaveTextViews(1);
+                break;
+            case R.id.tvUsedValue5InSaveTo:
+                clickOnWhereToSaveTextViews(2);
+                break;
+            case R.id.tvUsedValue6InSaveTo:
+                clickOnWhereToSaveTextViews(3);
+                break;
+            case R.id.tvUsedValue7InSaveTo:
+                clickOnWhereToSaveTextViews(4);
+                break;
+            case R.id.tvUsedValue8InSaveTo:
+                clickOnWhereToSaveTextViews(5);
+                break;
+            case R.id.tvUsedValue9InSaveTo:
+                clickOnWhereToSaveTextViews(6);
+                break;
+            case R.id.tvUsedValue10InSaveTo:
+                clickOnWhereToSaveTextViews(7);
+                break;
+            case R.id.tvUsedValue11InSaveTo:
+                clickOnWhereToSaveTextViews(8);
+                break;
+            case R.id.tvUsedValue12InSaveTo:
+                clickOnWhereToSaveTextViews(9);
                 break;
         }
     }
 
+    private void clickOnWhereToSaveTextViews(int id) {
+
+        if (isAllowedToChangeRecieved[id]) {
+            saveInContainer = id;
+            updateUsedValuesColors();
+            mTextViewtvUsedValueInSaveTo[id].setBackgroundColor(YELLOW);
+        } else {
+            Toast.makeText(this, "Already used!", Toast.LENGTH_SHORT).show();
+        }
+
+
+
+    }
+
     private void clickOnDice(int mId) {
         Log.d(TAG, "clickOnDice:" + mId);
-        if (useDice[mId]) {
-            useDice[mId] = false;
+        if (mUseDice[mId]) {
+            mUseDice[mId] = false;
             Toast.makeText(this, "Don't use dice" + (mId +1), Toast.LENGTH_SHORT).show();
         } else {
-            useDice[mId] = true;
+            mUseDice[mId] = true;
             Toast.makeText(this, "Use dice" + (mId +1), Toast.LENGTH_SHORT).show();
         }
         updateDicesOnTheDisplay();
+    }
+
+    private void clickOnCalculateScoreButton() {
+        Log.d(TAG, "clickOnCalculateScoreButton: ");
+
+        if (saveInContainer == -1) {
+            Toast.makeText(this, "Choose where to save first", Toast.LENGTH_SHORT).show();
+        } else {
+            int sum = calculateScore.calculateSum(dicesRecived, (saveInContainer), mUseDice);
+            mReturnThisScore = sum;
+            mSaveScoreIn = saveInContainer;
+
+            String mOutputToTextView;
+            if (sum == -1) {
+                mOutputToTextView = "Not a valid score, remove dices that don't sum upp";
+            } else {
+                mOutputToTextView = "Score is: " + sum;
+            }
+
+            mTextViewShowCalculatedScore.setText(mOutputToTextView);
+            Log.d(TAG, "clickOnCalculateScoreButton: Sum is = " + sum);
+        }
+    }
+
+    private void clickOnSaveButton() {
+        Log.d(TAG, "clickOnSaveButton: ");
+        returnThis();
+        finish();
     }
 
     @Override
@@ -284,4 +320,5 @@ public class SaveTo extends AppCompatActivity implements View.OnClickListener {
         super.onPause();
         returnThis();
     }
+
 }
