@@ -145,10 +145,6 @@ public class SaveTo extends AppCompatActivity implements View.OnClickListener {
     // TextView for displaying score
     private TextView mTextViewShowCalculatedScore;
 
-    // Buttons
-    private Button mButtonSave;
-    private Button mButtonCalculateScore;
-
     CalculateScore calculateScore;
 
     // onCreate
@@ -172,8 +168,8 @@ public class SaveTo extends AppCompatActivity implements View.OnClickListener {
         setUseDicesToTrue();
         updateDicesOnTheDisplay();
         // Make dices clickable
-        for (int i = 0; i < mImageViewDiceResult.length; i++) {
-            mImageViewDiceResult[i].setOnClickListener(this);
+        for (ImageView imageView : mImageViewDiceResult) {
+            imageView.setOnClickListener(this);
         }
 
 
@@ -181,16 +177,17 @@ public class SaveTo extends AppCompatActivity implements View.OnClickListener {
         mTextViewShowCalculatedScore = findViewById(R.id.tvShowCalculatedScore);
 
         // Make clickable buttons
-        mButtonSave = findViewById(R.id.btnSave);
-        mButtonSave.setOnClickListener(this);
-        mButtonCalculateScore = findViewById(R.id.btnCalculateScore);
-        mButtonCalculateScore.setOnClickListener(this);
+        // Buttons
+        Button buttonSave = findViewById(R.id.btnSave);
+        buttonSave.setOnClickListener(this);
+        Button buttonCalculateScore = findViewById(R.id.btnCalculateScore);
+        buttonCalculateScore.setOnClickListener(this);
 
         // Stuff related to show used containers
         mapTextViewtvUsedValueInSaveTo();
         updateUsedValuesColors();
-        for (int i = 0; i < mTextViewtvUsedValueInSaveTo.length; i++) {
-            mTextViewtvUsedValueInSaveTo[i].setOnClickListener(this);
+        for (TextView textView : mTextViewtvUsedValueInSaveTo) {
+            textView.setOnClickListener(this);
         }
 
 

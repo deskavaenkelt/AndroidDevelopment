@@ -44,4 +44,9 @@ class Score {
         this.mScore = newScore;
         this.mAllowedToChange = false;
     }
+
+    void resetScore() {
+        this.mScore = 0;
+        this.mAllowedToChange = true;
+    }
 }

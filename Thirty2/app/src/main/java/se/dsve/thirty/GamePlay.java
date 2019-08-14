@@ -107,11 +107,7 @@ class GamePlay {
     void changeStateDice(int diceId) {
         Log.d(TAG, "changeStateDice: ");
         if (mAllowedToChangeStateOnDice) {
-            if (sLockDice[diceId]) {
-                sLockDice[diceId] = false;
-            } else {
-                sLockDice[diceId] = true;
-            }
+            sLockDice[diceId] = !sLockDice[diceId];
         }
     }
 }

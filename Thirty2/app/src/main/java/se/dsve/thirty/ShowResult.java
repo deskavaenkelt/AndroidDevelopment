@@ -9,11 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class ShowResult extends AppCompatActivity {
-    private static final String TAG = "ShowResult";
 
-    private TextView mSendToTextView;
-    private TextView mTotalScoreTextView;
-    private Button mResetButton;
+    private boolean mGameOver;
 
     private Score[] mResultBank = new Score[]{
             new Score(3, 0),
@@ -28,27 +25,24 @@ public class ShowResult extends AppCompatActivity {
             new Score(12, 0)
     };
 
+    // Updates entire object every time the function is called
     private void receivedIntent() {
         String[] scoreBank = new String[]{"r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10"};
+        String isGameOver = "gameOver";
+
         Intent receivedIntent = getIntent();
         for (int i = 0; i < scoreBank.length; i++) {
             mResultBank[i].updateScore(i, receivedIntent.getIntExtra(scoreBank[i], 0));
         }
+        mGameOver = receivedIntent.getBooleanExtra(isGameOver, false);
     }
 
-    private void returnThis(boolean restart) {
+    private void returnThis(/*boolean restart*/) {
+        // Could have done this check in Throw dices but wanted to return something
+//        String resetGame = "reset_game";
         Intent sendBackThis = new Intent();
-        sendBackThis.putExtra("resetGame", restart);
+//        sendBackThis.putExtra(resetGame, restart);
         setResult(RESULT_OK, sendBackThis);
-    }
-
-    private boolean checkIfGameOver() {
-        for (int i = 0; i < mResultBank.length; i++) {
-            if (mResultBank[i].isAllowedToChange()) {
-                return false;
-            }
-        }
-        return true;
     }
 
     @Override
@@ -57,37 +51,40 @@ public class ShowResult extends AppCompatActivity {
         setContentView(R.layout.activity_show_result);
 
         receivedIntent();
-        mSendToTextView = findViewById(R.id.tvSentTextHere);
-        mTotalScoreTextView = findViewById(R.id.twTotalResult);
-        mResetButton = findViewById(R.id.btnRestartGame);
+        TextView sendToTextView = findViewById(R.id.tvSentTextHere);
+        TextView totalScoreTextView = findViewById(R.id.twTotalResult);
 
-        mResetButton.setOnClickListener(new View.OnClickListener() {
+        Button resetButton = findViewById(R.id.btnRestartGame);
+        resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                returnThis(true);
+//                returnThis(true);
                 finish();
             }
         });
 
-        String output = "3 or less = " + mResultBank[0].getScore() + "\n";
+        // Print out all results
+        StringBuilder output = new StringBuilder("3 or less = " + mResultBank[0].getScore() + "\n");
         for (int i = 1; i < mResultBank.length; i++) {
-            output += "Sum of " + (i+4) + " = " + mResultBank[i].getScore() + "\n";
+            output.append("Sum of ").append(i + 4).append(" = ").append(mResultBank[i].getScore()).append("\n");
         }
-        mSendToTextView.setText(output);
+        sendToTextView.setText(output.toString());
 
+        // Print out the total score for all results
         int sum = 0;
-        for (int i = 0; i < mResultBank.length; i++) {
-            sum += mResultBank[i].getScore();
+        for (Score score : mResultBank) {
+            sum += score.getScore();
         }
         String mTotalScore = "Total score is " + sum;
-        mTotalScoreTextView.setText(mTotalScore);
+        totalScoreTextView.setText(mTotalScore);
 
-        if (checkIfGameOver()) {
-            mResetButton.setVisibility(View.VISIBLE);
+        // Check if the game is over
+        if (mGameOver) {
+            resetButton.setVisibility(View.VISIBLE);
         } else {
-            mResetButton.setVisibility(View.INVISIBLE);
+            resetButton.setVisibility(View.INVISIBLE);
         }
 
-        returnThis(false);
+        returnThis(/*false*/);
     }
 }

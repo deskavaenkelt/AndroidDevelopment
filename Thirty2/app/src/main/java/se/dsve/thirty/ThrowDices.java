@@ -14,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 import static android.graphics.Color.GREEN;
 import static android.graphics.Color.RED;
 
@@ -21,6 +24,7 @@ public class ThrowDices extends AppCompatActivity implements View.OnClickListene
     private static final String TAG = "ThrowDices";
     private static final int REQUEST_CODE_RESULT = 1;
     private static final int REQUEST_CODE_SAVE_IN = 2;
+    private static final int REQUEST_CODE_RESET = 3;
 
     // ImageView & TextViews clickable
     private ImageView[] mImageViewDices = new ImageView[6];
@@ -78,6 +82,8 @@ public class ThrowDices extends AppCompatActivity implements View.OnClickListene
     private boolean mShowUsedValues = true;
 
     private boolean mGameOver = false;
+
+    private int[] mHighScore = new int[3];
 
 
     @Override
@@ -165,10 +171,15 @@ public class ThrowDices extends AppCompatActivity implements View.OnClickListene
         Toast.makeText(this, "hi result", Toast.LENGTH_SHORT).show();
 
         String[] scoreBank = new String[]{"r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10"};
+        String isGameOver = "gameOver";
+
         Intent showResult = new Intent(ThrowDices.this, ShowResult.class);
         for (int i = 0; i < scoreBank.length; i++) {
             showResult.putExtra(scoreBank[i], mScoreBank[i].getScore());
         }
+        mGameOver = checkIfGameOver();
+        showResult.putExtra(isGameOver, mGameOver);
+
         startActivityForResult(showResult, REQUEST_CODE_RESULT);
     }
 
@@ -283,8 +294,6 @@ public class ThrowDices extends AppCompatActivity implements View.OnClickListene
         String[] diceName = new String[]{ "dice1", "dice2", "dice3", "dice4", "dice5", "dice6"};
         String[] usedUpValuesInScoreBank = new String[]{"usedUpValue3", "usedUpValue4", "usedUpValue5", "usedUpValue6", "usedUpValue7", "usedUpValue8", "usedUpValue9", "usedUpValue10", "usedUpValue11", "usedUpValue12"};
 
-        // TODO: mScoreBank[0].isAllowedToChange();
-
         Intent saveThisIn = new Intent(ThrowDices.this, SaveTo.class);
         for (int i = 0; i < diceName.length; i++) {
             saveThisIn.putExtra(diceName[i], dices[i]);
@@ -306,6 +315,7 @@ public class ThrowDices extends AppCompatActivity implements View.OnClickListene
             if (REQUEST_CODE_RESULT == requestCode) {
                 Log.d(TAG, "onActivityResult: REQUEST_CODE_RESULT = 1");
                 try {
+                    assert data != null;
                     String output = data.getStringExtra("coming_back");
                     Toast.makeText(this, output, Toast.LENGTH_SHORT).show();
                 } catch (NullPointerException e) {
@@ -315,6 +325,7 @@ public class ThrowDices extends AppCompatActivity implements View.OnClickListene
                 Log.d(TAG, "onActivityResult: REQUEST_CODE_SAVE_IN = 2");
                 try {
                     String[] returnValue = new String[]{"coming_back", "total_score", "save_in"};
+                    assert data != null;
                     String one = data.getStringExtra(returnValue[0]);
                     Toast.makeText(this, one, Toast.LENGTH_SHORT).show();
 
@@ -340,20 +351,58 @@ public class ThrowDices extends AppCompatActivity implements View.OnClickListene
                 updateDicesOnTheDisplay();
                 updateThrowText();
                 updateUsedValuesColors();
+            } else if (REQUEST_CODE_RESET == requestCode) {
+                // Reset all parameters and save high score in som sort of top three array
+                if (mGameOver) {
+                    // Save new high score before resetting
+                    updateHighScore();
+
+                    // Reset score
+                    for (Score score : mScoreBank) {
+                        score.resetScore();
+                    }
+                }
             }
         }
-
-
-        // TODO: Resultcode för att reseta spelet
-        // TODO: Skapa highscore på förstasidan?
     }
 
     private boolean checkIfGameOver() {
-        for (int i = 0; i < mScoreBank.length; i++) {
-            if (mScoreBank[i].isAllowedToChange()) {
+        for (Score score : mScoreBank) {
+            if (score.isAllowedToChange()) {
                 return false;
             }
         }
         return true;
     }
+
+    private void updateHighScore() {
+        // TODO: Top 3
+        // Calculate Highscore
+        int newHighScore = 0;
+        for (Score score : mScoreBank) {
+            newHighScore += score.getScore();
+        }
+
+        Arrays.sort(mHighScore);
+
+        if (newHighScore > mHighScore[0]) {
+            mHighScore[2] = mHighScore[1];
+            mHighScore[1] = mHighScore[0];
+            mHighScore[0] = newHighScore;
+            Toast.makeText(this, "Congratulation's, new high score", Toast.LENGTH_SHORT).show();
+        } else if (newHighScore > mHighScore[1]) {
+            mHighScore[2] = mHighScore[1];
+            mHighScore[1] = newHighScore;
+            Toast.makeText(this, "Congratulation's, second best score", Toast.LENGTH_SHORT).show();
+        } else if (newHighScore > mHighScore[2]) {
+            mHighScore[2] = newHighScore;
+            Toast.makeText(this, "Barely made it to the list", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Sorry score to low to make it to the list", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 }
+// TODO: Skapa funktion som sorterar top 3 resultat
+// TODO: Visa highscore på ShowResult
+// TODO: Save on Rotate in all layouts not implemented
